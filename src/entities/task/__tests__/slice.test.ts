@@ -18,7 +18,7 @@ interface RootState {
   task: TaskState;
 }
 
-describe("taskSlice с мокированием функций и данных", () => {
+describe("taskSlice with mocking data and functions", () => {
   let store: ReturnType<typeof configureStore<RootState>>;
 
   beforeEach(() => {
@@ -26,7 +26,7 @@ describe("taskSlice с мокированием функций и данных",
     jest.clearAllMocks();
   });
 
-  it("загружает задачи с замоканным TaskService.getTasks", async () => {
+  it("fetch tasks with mocked TaskService.getTasks", async () => {
     const mockTasks: Task[] = [{ id: 1, title: "Задача 1", completed: false }];
     const { getTasks } = require("@shared/api/taskService").TaskService;
     (getTasks as jest.Mock).mockResolvedValue({ data: mockTasks });
@@ -40,7 +40,7 @@ describe("taskSlice с мокированием функций и данных",
     expect(state.error).toBe(null);
   });
 
-  it("обрабатывает ошибку с замоканным TaskService.getTasks", async () => {
+  it("handles error with mocked TaskService.getTasks", async () => {
     const { getTasks } = require("@shared/api/taskService").TaskService;
     (getTasks as jest.Mock).mockRejectedValue(new Error("Rejected"));
 
@@ -51,25 +51,23 @@ describe("taskSlice с мокированием функций и данных",
     expect(state.error).toBe("Rejected");
   });
 
-  it("добавляет задачу с замоканным TaskService.addTask", async () => {
-    const newTask = { id: 1, title: "Новая задача", completed: false };
+  it("add task to mocked TaskService.addTask", async () => {
+    const newTask = { id: 1, title: "New Task", completed: false };
     const { addTask } = require("@shared/api/taskService").TaskService;
     (addTask as jest.Mock).mockResolvedValue({ data: newTask });
 
-    await store.dispatch(
-      addNewTask({ title: "Новая задача", completed: false })
-    );
+    await store.dispatch(addNewTask({ title: "New Task", completed: false }));
 
     const state = store.getState().task;
     expect(addTask).toHaveBeenCalledWith({
-      title: "Новая задача",
+      title: "New Task",
       completed: false,
     });
     expect(state.tasks).toContainEqual(newTask);
   });
 
-  it("переключает задачу с замоканным TaskService.updateTask", async () => {
-    const initialTask = { id: 1, title: "Задача 1", completed: false };
+  it("toggle task with mocked TaskService.updateTask", async () => {
+    const initialTask = { id: 1, title: "Task 1", completed: false };
     store = configureStore<RootState>({
       reducer: { task: taskReducer },
       preloadedState: {
@@ -80,7 +78,7 @@ describe("taskSlice с мокированием функций и данных",
         },
       },
     });
-    const updatedTask = { id: 1, title: "Задача 1", completed: true };
+    const updatedTask = { id: 1, title: "Task 1", completed: true };
     const { updateTask } = require("@shared/api/taskService").TaskService;
     (updateTask as jest.Mock).mockResolvedValue({ data: updatedTask });
 
