@@ -1,10 +1,8 @@
-// src/entities/task/__tests__/slice.test.ts
 import { configureStore } from "@reduxjs/toolkit";
 import taskReducer from "../slice";
 import { fetchTasks, addNewTask, toggleTask } from "../actions";
 import { Task, TaskState } from "../types";
 
-// Мокируем TaskService
 jest.mock("@shared/api/taskService", () => ({
   TaskService: {
     getTasks: jest.fn(),
@@ -27,7 +25,7 @@ describe("taskSlice with mocking data and functions", () => {
   });
 
   it("fetch tasks with mocked TaskService.getTasks", async () => {
-    const mockTasks: Task[] = [{ id: 1, title: "Задача 1", completed: false }];
+    const mockTasks: Task[] = [{ id: 1, title: "Task 1", completed: false }];
     const { getTasks } = require("@shared/api/taskService").TaskService;
     (getTasks as jest.Mock).mockResolvedValue({ data: mockTasks });
 
