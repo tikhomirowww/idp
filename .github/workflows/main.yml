@@ -1,4 +1,4 @@
-name: CI
+name: Build and test
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - '*'
+      - "*"
 
 jobs:
   build-and-test:
@@ -19,11 +19,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Matches your Dockerfile
+          node-version: "18" # Matches your Dockerfile
 
       # Install dependencies
       - name: Install dependencies
         run: npm install
+
+      # Run tests without coverage
+      - name: Run build
+        run: npm run build
 
       # Run tests without coverage
       - name: Run unit tests
