@@ -3,7 +3,7 @@ import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import "./TaskList.scss";
-import { fetchTasks, toggleTask } from "@entities/task/actions";
+import { deleteTask, fetchTasks, toggleTask } from "@entities/task/actions";
 
 export const TaskList: FC = () => {
   const { tasks, error, loading } = useSelector(
@@ -18,18 +18,29 @@ export const TaskList: FC = () => {
     dispatch(toggleTask(task));
   };
 
+  const removeTask = (id: number) => {
+    dispatch(deleteTask(id));
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <ul className="task-list">
       {tasks.map((task) => (
-        <li
-          className={classNames({ completed: task.completed })}
-          onClick={() => onTaskToggle(task)}
-          key={task.id}
-        >
-          <p>{task.title}</p> {task.completed ? "✅" : "❌"}
+        <li className={classNames({ completed: task.completed })} key={task.id}>
+          <div
+            onClick={() => onTaskToggle(task)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              cursor: "pointer",
+            }}
+          >
+            <p>{task.title}</p> {task.completed ? "✅" : "❌"}
+          </div>
+          <button onClick={() => removeTask(task.id)}>Delete</button>
         </li>
       ))}
     </ul>

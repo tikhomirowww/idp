@@ -2,7 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { TaskService } from "../../shared/api/taskService";
 import { Task } from "./types"; // Assuming you'll move types here too
 
-// Fetch all tasks
 export const fetchTasks = createAsyncThunk<
   Task[],
   void,
@@ -18,7 +17,6 @@ export const fetchTasks = createAsyncThunk<
   }
 });
 
-// Add a new task
 export const addNewTask = createAsyncThunk<
   Task,
   { title: string; completed: boolean },
@@ -34,7 +32,6 @@ export const addNewTask = createAsyncThunk<
   }
 });
 
-// Toggle a task's completion status
 export const toggleTask = createAsyncThunk<Task, Task, { rejectValue: string }>(
   "tasks/toggleTask",
   async (task, { rejectWithValue, dispatch }) => {
@@ -50,3 +47,19 @@ export const toggleTask = createAsyncThunk<Task, Task, { rejectValue: string }>(
     }
   }
 );
+
+export const deleteTask = createAsyncThunk<
+  number,
+  number,
+  { rejectValue: string }
+>("tasks/toggleTask", async (id, { rejectWithValue, dispatch }) => {
+  try {
+    const response = await TaskService.deleteTask(id);
+    dispatch(fetchTasks());
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(
+      error instanceof Error ? error.message : "Failed to toggle task"
+    );
+  }
+});
